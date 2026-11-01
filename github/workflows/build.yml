@@ -8,25 +8,20 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: Set up JDK 17
+    - name: Set up JDK 11
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '11'
         distribution: 'temurin'
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
-      with:
-        gradle-version: 8.2
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
 
-    - name: Print File Structure (Debug)
-      run: ls -R
-
-    - name: Test Gradle Configuration (Debug)
-      run: gradle tasks --stacktrace
+    - name: Generate Gradle Wrapper
+      run: gradle wrapper --gradle-version 7.5
 
     - name: Build Debug APK
-      run: gradle assembleDebug
+      run: ./gradlew assembleDebug
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
